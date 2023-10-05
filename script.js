@@ -30,8 +30,8 @@ function filterShoesByName(searchText) {
         );
 }
 
-function countShoes(shoes) {
-        return shoes.length;
+function calculateTotalPrice(shoes) {
+        return shoes.reduce((total, shoe) => total + shoe.price, 0);
 }
 
 renderShoesList(shoesData);
@@ -58,6 +58,7 @@ document.getElementById("sort-checkbox").addEventListener("change", () => {
 });
 
 document.getElementById("count-button").addEventListener("click", () => {
-        const count = countShoes(shoesData);
-        alert(`Number of shoes: ${count}`);
+        const totalPrice = calculateTotalPrice(shoesData);
+        const totalPriceValue = document.getElementById("total-price-value");
+        totalPriceValue.textContent = totalPrice + " $";
 });
