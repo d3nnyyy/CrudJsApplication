@@ -7,6 +7,8 @@ const shoesData = [
         { name: "Puma Suede", price: 70, size: 9, color: "Black" }
 ];
 
+let filteredShoes = shoesData;
+
 function renderShoesList(shoes) {
         const shoesList = document.getElementById("shoes-list");
         shoesList.innerHTML = "";
@@ -25,9 +27,10 @@ function renderShoesList(shoes) {
 }
 
 function filterShoesByName(searchText) {
-        return shoesData.filter((shoe) =>
+        filteredShoes = shoesData.filter((shoe) =>
                 shoe.name.toLowerCase().includes(searchText.toLowerCase())
         );
+        renderShoesList(filteredShoes);
 }
 
 function calculateTotalPrice(shoes) {
@@ -39,26 +42,26 @@ renderShoesList(shoesData);
 document.getElementById("search-button").addEventListener("click", () => {
         const searchInput = document.getElementById("search-input");
         const searchText = searchInput.value.trim();
-        const filteredShoes = filterShoesByName(searchText);
-        renderShoesList(filteredShoes);
+        filterShoesByName(searchText);
 });
 
 document.getElementById("clear-button").addEventListener("click", () => {
         const searchInput = document.getElementById("search-input");
         searchInput.value = "";
-        renderShoesList(shoesData);
+        filteredShoes = shoesData;
+        renderShoesList(filteredShoes);
 });
 
 document.getElementById("sort-checkbox").addEventListener("change", () => {
         const sortCheckbox = document.getElementById("sort-checkbox");
         const sortedShoes = sortCheckbox.checked
-                ? [...shoesData].sort((a, b) => a.price - b.price)
-                : shoesData;
+                ? [...filteredShoes].sort((a, b) => a.price - b.price)
+                : filteredShoes;
         renderShoesList(sortedShoes);
 });
 
 document.getElementById("count-button").addEventListener("click", () => {
-        const totalPrice = calculateTotalPrice(shoesData);
+        const totalPrice = calculateTotalPrice(filteredShoes);
         const totalPriceValue = document.getElementById("total-price-value");
         totalPriceValue.textContent = totalPrice + " $";
 });
