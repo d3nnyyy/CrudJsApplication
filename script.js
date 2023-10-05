@@ -1,4 +1,3 @@
-
 const shoesData = [
         { name: "Nike Air Max", price: 120, size: 10, color: "Red" },
         { name: "Adidas Ultraboost", price: 150, size: 9, color: "Black" },
@@ -31,6 +30,10 @@ function filterShoesByName(searchText) {
         );
 }
 
+function countShoes(shoes) {
+        return shoes.length;
+}
+
 renderShoesList(shoesData);
 
 document.getElementById("search-button").addEventListener("click", () => {
@@ -44,4 +47,17 @@ document.getElementById("clear-button").addEventListener("click", () => {
         const searchInput = document.getElementById("search-input");
         searchInput.value = "";
         renderShoesList(shoesData);
+});
+
+document.getElementById("sort-checkbox").addEventListener("change", () => {
+        const sortCheckbox = document.getElementById("sort-checkbox");
+        const sortedShoes = sortCheckbox.checked
+                ? [...shoesData].sort((a, b) => a.price - b.price)
+                : shoesData;
+        renderShoesList(sortedShoes);
+});
+
+document.getElementById("count-button").addEventListener("click", () => {
+        const count = countShoes(shoesData);
+        alert(`Number of shoes: ${count}`);
 });
