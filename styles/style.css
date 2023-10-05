@@ -1,0 +1,73 @@
+body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+}
+
+header {
+        justify-content: space-around;
+        display: flex;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 15px;
+}
+
+h1 {
+        margin: 0;
+}
+
+#header-controls {
+        margin-top: 10px;
+}
+
+#search-input {
+        padding: 5px;
+        margin-right: 10px;
+}
+
+#content {
+        display: flex;
+}
+
+#manage-shoes-panel {
+        flex: 1;
+        padding: 20px;
+        border-right: 1px solid #ddd;
+}
+
+#sort-checkbox {
+        margin-right: 10px;
+}
+
+#shoes-list {
+        display: flex;
+        flex-wrap: wrap;
+        flex: 3;
+        gap: 20px;
+        padding: 20px;
+}
+
+.shoe-item {
+        padding: 0 10px;
+        border-radius: 15px;
+        width: 200px;
+        height: 200px;
+        border: 1px solid #333;
+}
+
+.shoe-item h2 {
+        text-align: center;
+}
+
+button {
+        padding: 10px 20px;
+        background-color: #333;
+        color: white;
+        border: none;
+        cursor: pointer;
+}
+
+button:hover {
+        background-color: #555;
+}
