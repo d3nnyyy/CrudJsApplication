@@ -130,6 +130,22 @@ editButtons.forEach((button, index) => {
         });
 });
 
+const validationModal = document.getElementById("validation-modal");
+const validationMessage = document.getElementById("validation-message");
+const validationModalClose = document.getElementById("validation-modal-close");
+
+// Function to open the validation modal with a message
+function openValidationModal(message) {
+        validationMessage.textContent = message;
+        validationModal.style.display = "block";
+}
+
+// Close the validation modal when the close button is clicked
+validationModalClose.addEventListener("click", () => {
+        validationModal.style.display = "none";
+});
+
+// Update the "Save" button event listener to use the validation modal
 document.getElementById("save-shoe").addEventListener("click", () => {
         const nameInput = document.getElementById("new-shoe-name");
         const priceInput = document.getElementById("new-shoe-price");
@@ -137,7 +153,7 @@ document.getElementById("save-shoe").addEventListener("click", () => {
         const colorInput = document.getElementById("new-shoe-color");
 
         if (!nameInput.value || !priceInput.value || !sizeInput.value || !colorInput.value) {
-                alert("All fields are required.");
+                openValidationModal("All fields are required.");
                 return;
         }
 
@@ -145,10 +161,11 @@ document.getElementById("save-shoe").addEventListener("click", () => {
         const size = parseFloat(sizeInput.value);
 
         if (isNaN(price) || price <= 0 || isNaN(size) || size <= 0) {
-                alert("Price and size must be valid numbers greater than 0.");
+                openValidationModal("Price and size must be valid numbers greater than 0.");
                 return;
         }
 
+        // If validation passes, add the new shoe and close the create form
         const newShoe = {
                 name: nameInput.value,
                 price,
@@ -165,4 +182,3 @@ document.getElementById("save-shoe").addEventListener("click", () => {
         // Reset and hide the create form
         resetCreateForm();
 });
-
