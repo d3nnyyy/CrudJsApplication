@@ -73,90 +73,14 @@ document.getElementById("count-button").addEventListener("click", () => {
         totalPriceValue.textContent = totalPrice + " $";
 });
 
+// CREATE
+
 const createButton = document.getElementById("create-button");
 const createForm = document.getElementById("create-form");
-const editButtons = document.querySelectorAll(".edit-shoe");
 
 createButton.addEventListener("click", () => {
         createForm.style.display = "block";
 });
-
-editButtons.forEach((button, index) => {
-        button.addEventListener("click", () => {
-                // Assuming you have a function to populate the edit form with shoe data
-                // Here, I'm using the index attribute to identify the shoe being edited
-                populateEditForm(filteredShoes[index], index);
-        });
-});
-
-
-document.getElementById("cancel-shoe").addEventListener("click", () => {
-        resetCreateForm();
-});
-
-document.getElementById("cancel-edited-shoe").addEventListener("click", () => {
-        resetEditForm();
-});
-
-function populateEditForm(shoe, index) {
-        const editForm = document.getElementById("edit-form");
-
-        // Populate the edit form fields with shoe data
-        document.getElementById("edit-shoe-name").value = shoe.name;
-        document.getElementById("edit-shoe-price").value = shoe.price;
-        document.getElementById("edit-shoe-size").value = shoe.size;
-        document.getElementById("edit-shoe-color").value = shoe.color;
-
-        // Show the edit form
-        editForm.style.display = "block";
-
-        // Add an event listener to save the edited data
-        document.getElementById("save-edited-shoe").addEventListener("click", () => {
-                const nameInput = document.getElementById("edit-shoe-name");
-                const priceInput = document.getElementById("edit-shoe-price");
-                const sizeInput = document.getElementById("edit-shoe-size");
-                const colorInput = document.getElementById("edit-shoe-color");
-
-                if (!nameInput.value || !priceInput.value || !sizeInput.value || !colorInput.value) {
-                        openValidationModal("All fields are required.");
-                        return;
-                }
-
-                const price = parseFloat(priceInput.value);
-                const size = parseFloat(sizeInput.value);
-
-                if (isNaN(price) || price <= 0 || isNaN(size) || size <= 0) {
-                        openValidationModal("Price and size must be valid numbers greater than 0.");
-                        return;
-                }
-
-                // If validation passes, add the edited shoe and close the edit form
-                const editedShoe = {
-                        name: nameInput.value,
-                        price,
-                        size,
-                        color: colorInput.value,
-                };
-
-                // Update the shoe data in the filteredShoes array
-                filteredShoes[index] = editedShoe;
-
-                // Re-render the shoes list
-                renderShoesList(filteredShoes);
-
-                // Reset and hide the edit form
-                resetEditForm();
-        });
-}
-
-function resetEditForm() {
-        document.getElementById("edit-shoe-name").value = "";
-        document.getElementById("edit-shoe-price").value = "";
-        document.getElementById("edit-shoe-size").value = "";
-        document.getElementById("edit-shoe-color").value = "";
-        document.getElementById("edit-form").style.display = "none";
-}
-
 
 function resetCreateForm() {
         document.getElementById("new-shoe-name").value = "";
@@ -171,29 +95,6 @@ createButton.addEventListener("click", () => {
         createForm.style.display = "block";
 });
 
-editButtons.forEach((button, index) => {
-        button.addEventListener("click", () => {
-                // Populate the edit form with the selected shoe's data
-                populateEditForm(filteredShoes[index], index);
-        });
-});
-
-const validationModal = document.getElementById("validation-modal");
-const validationMessage = document.getElementById("validation-message");
-const validationModalClose = document.getElementById("validation-modal-close");
-
-// Function to open the validation modal with a message
-function openValidationModal(message) {
-        validationMessage.textContent = message;
-        validationModal.style.display = "block";
-}
-
-// Close the validation modal when the close button is clicked
-validationModalClose.addEventListener("click", () => {
-        validationModal.style.display = "none";
-});
-
-// Update the "Save" button event listener to use the validation modal
 document.getElementById("save-shoe").addEventListener("click", () => {
         const nameInput = document.getElementById("new-shoe-name");
         const priceInput = document.getElementById("new-shoe-price");
@@ -213,7 +114,6 @@ document.getElementById("save-shoe").addEventListener("click", () => {
                 return;
         }
 
-        // If validation passes, add the new shoe and close the create form
         const newShoe = {
                 name: nameInput.value,
                 price,
@@ -221,12 +121,94 @@ document.getElementById("save-shoe").addEventListener("click", () => {
                 color: colorInput.value,
         };
 
-        // Add the new shoe to the filteredShoes array
         filteredShoes.push(newShoe);
 
-        // Re-render the shoes list
         renderShoesList(filteredShoes);
 
-        // Reset and hide the create form
         resetCreateForm();
+});
+
+document.getElementById("cancel-shoe").addEventListener("click", () => {
+        resetCreateForm();
+});
+
+// EDIT
+
+const editButtons = document.querySelectorAll(".edit-shoe");
+
+editButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+                populateEditForm(filteredShoes[index], index);
+        });
+});
+
+document.getElementById("cancel-edited-shoe").addEventListener("click", () => {
+        resetEditForm();
+});
+
+function populateEditForm(shoe, index) {
+        const editForm = document.getElementById("edit-form");
+
+        document.getElementById("edit-shoe-name").value = shoe.name;
+        document.getElementById("edit-shoe-price").value = shoe.price;
+        document.getElementById("edit-shoe-size").value = shoe.size;
+        document.getElementById("edit-shoe-color").value = shoe.color;
+
+        editForm.style.display = "block";
+
+        document.getElementById("save-edited-shoe").addEventListener("click", () => {
+                const nameInput = document.getElementById("edit-shoe-name");
+                const priceInput = document.getElementById("edit-shoe-price");
+                const sizeInput = document.getElementById("edit-shoe-size");
+                const colorInput = document.getElementById("edit-shoe-color");
+
+                if (!nameInput.value || !priceInput.value || !sizeInput.value || !colorInput.value) {
+                        openValidationModal("All fields are required.");
+                        return;
+                }
+
+                const price = parseFloat(priceInput.value);
+                const size = parseFloat(sizeInput.value);
+
+                if (isNaN(price) || price <= 0 || isNaN(size) || size <= 0) {
+                        openValidationModal("Price and size must be valid numbers greater than 0.");
+                        return;
+                }
+
+                const editedShoe = {
+                        name: nameInput.value,
+                        price,
+                        size,
+                        color: colorInput.value,
+                };
+
+                filteredShoes[index] = editedShoe;
+
+                renderShoesList(filteredShoes);
+
+                resetEditForm();
+        });
+}
+
+function resetEditForm() {
+        document.getElementById("edit-shoe-name").value = "";
+        document.getElementById("edit-shoe-price").value = "";
+        document.getElementById("edit-shoe-size").value = "";
+        document.getElementById("edit-shoe-color").value = "";
+        document.getElementById("edit-form").style.display = "none";
+}
+
+// MODAL VALIDATION
+
+const validationModal = document.getElementById("validation-modal");
+const validationMessage = document.getElementById("validation-message");
+const validationModalClose = document.getElementById("validation-modal-close");
+
+function openValidationModal(message) {
+        validationMessage.textContent = message;
+        validationModal.style.display = "block";
+}
+
+validationModalClose.addEventListener("click", () => {
+        validationModal.style.display = "none";
 });
