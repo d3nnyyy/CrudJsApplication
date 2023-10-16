@@ -23,6 +23,11 @@ function renderShoesList(shoes) {
                 <p>Color: ${shoe.color}</p>
                 <button class="edit-shoe" data-index="${index}">Edit</button>
             `;
+
+                shoeItem.querySelector(".edit-shoe").addEventListener("click", () => {
+                        populateEditForm(filteredShoes[index], index);
+                });
+
                 shoesList.appendChild(shoeItem);
         });
 }
@@ -84,22 +89,35 @@ editButtons.forEach((button, index) => {
         });
 });
 
+
+document.getElementById("cancel-shoe").addEventListener("click", () => {
+        resetCreateForm();
+});
+
+document.getElementById("cancel-edited-shoe").addEventListener("click", () => {
+        resetEditForm();
+});
+
 function populateEditForm(shoe, index) {
-        const editForm = document.getElementById("create-form");
+        const editForm = document.getElementById("edit-form");
+
         // Populate the edit form fields with shoe data
-        // Example: document.getElementById("new-shoe-name").value = shoe.name;
+        document.getElementById("edit-shoe-name").value = shoe.name;
+        document.getElementById("edit-shoe-price").value = shoe.price;
+        document.getElementById("edit-shoe-size").value = shoe.size;
+        document.getElementById("edit-shoe-color").value = shoe.color;
 
         // Show the edit form
         editForm.style.display = "block";
 
         // Add an event listener to save the edited data
-        document.getElementById("save-shoe").addEventListener("click", () => {
+        document.getElementById("save-edited-shoe").addEventListener("click", () => {
                 // Update the shoe data in the filteredShoes array
                 filteredShoes[index] = {
-                        name: document.getElementById("new-shoe-name").value,
-                        price: parseFloat(document.getElementById("new-shoe-price").value),
-                        size: parseFloat(document.getElementById("new-shoe-size").value),
-                        color: document.getElementById("new-shoe-color").value,
+                        name: document.getElementById("edit-shoe-name").value,
+                        price: parseFloat(document.getElementById("edit-shoe-price").value),
+                        size: parseFloat(document.getElementById("edit-shoe-size").value),
+                        color: document.getElementById("edit-shoe-color").value,
                 };
 
                 // Re-render the shoes list
@@ -109,6 +127,15 @@ function populateEditForm(shoe, index) {
                 editForm.style.display = "none";
         });
 }
+
+function resetEditForm() {
+        document.getElementById("edit-shoe-name").value = "";
+        document.getElementById("edit-shoe-price").value = "";
+        document.getElementById("edit-shoe-size").value = "";
+        document.getElementById("edit-shoe-color").value = "";
+        document.getElementById("edit-form").style.display = "none";
+}
+
 
 function resetCreateForm() {
         document.getElementById("new-shoe-name").value = "";
