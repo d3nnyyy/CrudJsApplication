@@ -112,19 +112,40 @@ function populateEditForm(shoe, index) {
 
         // Add an event listener to save the edited data
         document.getElementById("save-edited-shoe").addEventListener("click", () => {
-                // Update the shoe data in the filteredShoes array
-                filteredShoes[index] = {
-                        name: document.getElementById("edit-shoe-name").value,
-                        price: parseFloat(document.getElementById("edit-shoe-price").value),
-                        size: parseFloat(document.getElementById("edit-shoe-size").value),
-                        color: document.getElementById("edit-shoe-color").value,
+                const nameInput = document.getElementById("edit-shoe-name");
+                const priceInput = document.getElementById("edit-shoe-price");
+                const sizeInput = document.getElementById("edit-shoe-size");
+                const colorInput = document.getElementById("edit-shoe-color");
+
+                if (!nameInput.value || !priceInput.value || !sizeInput.value || !colorInput.value) {
+                        openValidationModal("All fields are required.");
+                        return;
+                }
+
+                const price = parseFloat(priceInput.value);
+                const size = parseFloat(sizeInput.value);
+
+                if (isNaN(price) || price <= 0 || isNaN(size) || size <= 0) {
+                        openValidationModal("Price and size must be valid numbers greater than 0.");
+                        return;
+                }
+
+                // If validation passes, add the edited shoe and close the edit form
+                const editedShoe = {
+                        name: nameInput.value,
+                        price,
+                        size,
+                        color: colorInput.value,
                 };
+
+                // Update the shoe data in the filteredShoes array
+                filteredShoes[index] = editedShoe;
 
                 // Re-render the shoes list
                 renderShoesList(filteredShoes);
 
-                // Hide the edit form
-                editForm.style.display = "none";
+                // Reset and hide the edit form
+                resetEditForm();
         });
 }
 
