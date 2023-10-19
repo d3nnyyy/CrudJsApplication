@@ -139,6 +139,7 @@ const editButtons = document.querySelectorAll(".edit-shoe");
 editButtons.forEach((button, index) => {
         button.addEventListener("click", () => {
                 populateEditForm(filteredShoes[index], index);
+                document.getElementById("save-edited-shoe").setAttribute("data-index", index);
         });
 });
 
@@ -156,39 +157,42 @@ function populateEditForm(shoe, index) {
 
         editForm.style.display = "block";
 
-        document.getElementById("save-edited-shoe").addEventListener("click", () => {
-                const nameInput = document.getElementById("edit-shoe-name");
-                const priceInput = document.getElementById("edit-shoe-price");
-                const sizeInput = document.getElementById("edit-shoe-size");
-                const colorInput = document.getElementById("edit-shoe-color");
-
-                if (!nameInput.value || !priceInput.value || !sizeInput.value || !colorInput.value) {
-                        openValidationModal("All fields are required.");
-                        return;
-                }
-
-                const price = parseFloat(priceInput.value);
-                const size = parseFloat(sizeInput.value);
-
-                if (isNaN(price) || price <= 0 || isNaN(size) || size <= 0) {
-                        openValidationModal("Price and size must be valid numbers greater than 0.");
-                        return;
-                }
-
-                const editedShoe = {
-                        name: nameInput.value,
-                        price,
-                        size,
-                        color: colorInput.value,
-                };
-
-                filteredShoes[index] = editedShoe;
-
-                renderShoesList(filteredShoes);
-
-                resetEditForm();
-        });
 }
+
+document.getElementById("save-edited-shoe").addEventListener("click", () => {
+        const nameInput = document.getElementById("edit-shoe-name");
+        const priceInput = document.getElementById("edit-shoe-price");
+        const sizeInput = document.getElementById("edit-shoe-size");
+        const colorInput = document.getElementById("edit-shoe-color");
+
+        const index = parseInt(document.getElementById("save-edited-shoe").getAttribute("data-index"), 10);
+
+        if (!nameInput.value || !priceInput.value || !sizeInput.value || !colorInput.value) {
+                openValidationModal("All fields are required.");
+                return;
+        }
+
+        const price = parseFloat(priceInput.value);
+        const size = parseFloat(sizeInput.value);
+
+        if (isNaN(price) || price <= 0 || isNaN(size) || size <= 0) {
+                openValidationModal("Price and size must be valid numbers greater than 0.");
+                return;
+        }
+
+        const editedShoe = {
+                name: nameInput.value,
+                price,
+                size,
+                color: colorInput.value,
+        };
+
+        filteredShoes[index] = editedShoe;
+
+        renderShoesList(filteredShoes);
+
+        resetEditForm();
+});
 
 function resetEditForm() {
         document.getElementById("edit-shoe-name").value = "";
