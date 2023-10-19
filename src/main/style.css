@@ -1,0 +1,150 @@
+body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+}
+
+header {
+        justify-content: space-around;
+        display: flex;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 15px;
+}
+
+h1 {
+        margin: 0;
+}
+
+#header-controls {
+        margin-top: 10px;
+}
+
+#search-input {
+        padding: 5px;
+        margin-right: 10px;
+}
+
+#content {
+        display: flex;
+}
+
+#manage-shoes-panel {
+        flex: 1;
+        padding: 20px;
+        border-right: 1px solid #ddd;
+}
+
+#sort-checkbox {
+        margin-right: 10px;
+}
+
+#shoes-list {
+        display: flex;
+        flex-wrap: wrap;
+        flex: 3;
+        gap: 20px;
+        padding: 20px;
+}
+
+.shoe-item {
+        padding: 0 10px;
+        padding-bottom: 50px;
+        border-radius: 15px;
+        width: 200px;
+        height: 200px;
+        border: 1px solid #333;
+}
+
+.shoe-item h2 {
+        text-align: center;
+}
+
+button {
+        padding: 10px 20px;
+        background-color: #333;
+        color: white;
+        border: none;
+        cursor: pointer;
+}
+
+button:hover {
+        background-color: #555;
+}
+
+/* Styles for the validation modal */
+#validation-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+}
+
+#validation-modal .modal-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+#validation-modal-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        cursor: pointer;
+}
+
+#validation-message {
+        font-size: 16px;
+        margin-bottom: 20px;
+}
+
+/* Add these styles to center the modal message text */
+#validation-message {
+        text-align: center;
+}
+
+/* Add these styles to style the close (X) button */
+#validation-modal-close {
+        color: #888;
+        font-size: 28px;
+}
+
+#validation-modal-close:hover {
+        color: #000;
+}
+
+/* Additional styles to make the modal more visually appealing */
+.modal-content {
+        max-width: 400px;
+        margin: 0 auto;
+}
+
+/* Add padding and background color to the close (X) button for better visibility */
+#validation-modal-close {
+        background-color: #f1f1f1;
+        padding: 5px 10px;
+        border-radius: 50%;
+}
+
+/* Add styles to make the modal message stand out */
+#validation-message {
+        background-color: #f1f1f1;
+        padding: 10px;
+        border-radius: 5px;
+}
+
+/* Add a slight border to the modal content */
+.modal-content {
+        border: 1px solid #ccc;
+}
