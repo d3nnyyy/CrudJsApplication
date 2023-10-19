@@ -9,7 +9,7 @@ import ua.dtsebulia.rest.service.ShoeService;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/shoes")
 @Slf4j
 public class ShoeController {
