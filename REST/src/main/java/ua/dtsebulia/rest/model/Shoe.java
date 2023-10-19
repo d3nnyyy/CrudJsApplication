@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Builder
-public class ShoeModel {
+public class Shoe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
