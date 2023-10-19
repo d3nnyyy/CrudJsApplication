@@ -1,40 +1,88 @@
-const shoesData = [
-        { name: "Nike Air Max", price: 120, size: 10, color: "Red" },
-        { name: "Adidas Ultraboost", price: 150, size: 9, color: "Black" },
-        { name: "Vans Old Skool", price: 60, size: 8, color: "White" },
-        { name: "Converse Chuck Taylor", price: 80, size: 11, color: "Blue" },
-        { name: "New Balance 574", price: 100, size: 10, color: "Green" },
-        { name: "Puma Suede", price: 70, size: 9, color: "Black" }
-];
-
-let filteredShoes = shoesData;
+const apiURL = 'http://localhost:8080/api/shoes';
+let filteredShoes = [];
 
 function renderShoesList(shoes) {
         const shoesList = document.getElementById("shoes-list");
         shoesList.innerHTML = "";
 
-        shoes.forEach((shoe, index) => {
+        shoes.forEach((shoe) => {
+
                 const shoeItem = document.createElement("div");
                 shoeItem.classList.add("shoe-item");
+                shoeItem.dataset.shoeId = shoe.id;
+
                 shoeItem.innerHTML = `
-                <h2>${shoe.name}</h2>
-                <p>Price: $${shoe.price}</p>
-                <p>Size: ${shoe.size}</p>
-                <p>Color: ${shoe.color}</p>
-                <button class="edit-shoe" data-index="${index}">Edit</button>
-            `;
+                        <h2>${shoe.name}</h2>
+                        <p>Price: $${shoe.price}</p>
+                        <p>Size: ${shoe.size}</p>
+                        <p>Color: ${shoe.color}</p>
+                        <button class="edit-shoe" data-shoe-id="${shoe.id}">Edit</button>
+                        `;
 
                 shoeItem.querySelector(".edit-shoe").addEventListener("click", () => {
-                        populateEditForm(filteredShoes[index], index);
+                        const shoeId = shoeItem.dataset.shoeId;
+                        populateEditForm(shoeId);
                 });
 
                 shoesList.appendChild(shoeItem);
         });
 }
 
+function fetchShoes() {
+        axios.get(apiURL)
+                .then((response) => {
+                        filteredShoes = response.data;
+                        renderShoesList(filteredShoes);
+                })
+                .catch((error) => {
+                        console.error('Error fetching shoes:', error);
+                });
+}
+
+function createShoe(newShoe) {
+        axios.post(apiURL, newShoe)
+                .then((response) => {
+                        // Handle success
+                        console.log('Shoe created:', response.data);
+                        fetchShoes(); // Refresh the shoe list
+                })
+                .catch((error) => {
+                        // Handle error
+                        console.error('Error creating shoe:', error);
+                });
+}
+
+function updateShoe(index, editedShoe) {
+        console.log(index, editedShoe)
+        const shoeId = filteredShoes[index - 1].id;
+        axios.put(`${apiURL}/${shoeId}`, editedShoe)
+                .then((response) => {
+                        // Handle success
+                        console.log('Shoe updated:', response.data);
+                        fetchShoes(); // Refresh the shoe list
+                })
+                .catch((error) => {
+                        // Handle error
+                        console.error('Error updating shoe:', error);
+                });
+}
+
+function deleteShoe(index) {
+        const shoeId = filteredShoes[index].id;
+        axios.delete(`${apiURL}/${shoeId}`)
+                .then(() => {
+                        // Handle success
+                        console.log('Shoe deleted');
+                        fetchShoes(); // Refresh the shoe list
+                })
+                .catch((error) => {
+                        // Handle error
+                        console.error('Error deleting shoe:', error);
+                });
+}
 
 function filterShoesByName(searchText) {
-        filteredShoes = shoesData.filter((shoe) =>
+        filteredShoes = filteredShoes.filter((shoe) =>
                 shoe.name.toLowerCase().includes(searchText.toLowerCase())
         );
         renderShoesList(filteredShoes);
@@ -43,8 +91,6 @@ function filterShoesByName(searchText) {
 function calculateTotalPrice(shoes) {
         return shoes.reduce((total, shoe) => total + shoe.price, 0);
 }
-
-renderShoesList(shoesData);
 
 document.getElementById("search-button").addEventListener("click", () => {
         const searchInput = document.getElementById("search-input");
@@ -55,8 +101,7 @@ document.getElementById("search-button").addEventListener("click", () => {
 document.getElementById("clear-button").addEventListener("click", () => {
         const searchInput = document.getElementById("search-input");
         searchInput.value = "";
-        filteredShoes = shoesData;
-        renderShoesList(filteredShoes);
+        fetchShoes();
 });
 
 document.getElementById("sort-checkbox").addEventListener("change", () => {
@@ -87,7 +132,7 @@ function resetCreateForm() {
         document.getElementById("new-shoe-price").value = "";
         document.getElementById("new-shoe-size").value = "";
         document.getElementById("new-shoe-color").value = "";
-        document.getElementById("create-form").style.display = "none";
+        createForm.style.display = "none";
 }
 
 createButton.addEventListener("click", () => {
@@ -121,10 +166,7 @@ document.getElementById("save-shoe").addEventListener("click", () => {
                 color: colorInput.value,
         };
 
-        filteredShoes.push(newShoe);
-
-        renderShoesList(filteredShoes);
-
+        createShoe(newShoe);
         resetCreateForm();
 });
 
@@ -134,30 +176,34 @@ document.getElementById("cancel-shoe").addEventListener("click", () => {
 
 // EDIT
 
-const editButtons = document.querySelectorAll(".edit-shoe");
-
-editButtons.forEach((button, index) => {
-        button.addEventListener("click", () => {
-                populateEditForm(filteredShoes[index], index);
-                document.getElementById("save-edited-shoe").setAttribute("data-index", index);
-        });
+document.getElementById("shoes-list").addEventListener("click", (event) => {
+        if (event.target.classList.contains("edit-shoe")) {
+                const shoeId = event.target.getAttribute("data-shoe-id");
+                populateEditForm(shoeId);
+                document.getElementById("save-edited-shoe").setAttribute("data-shoe-id", shoeId);
+        }
 });
+
 
 document.getElementById("cancel-edited-shoe").addEventListener("click", () => {
         resetEditForm();
 });
 
-function populateEditForm(shoe, index) {
+function populateEditForm(shoeId) {
+
+        var intShoeId = parseInt(shoeId);
+
         const editForm = document.getElementById("edit-form");
+        const shoe = filteredShoes.find((shoe) => shoe.id === intShoeId);
+        console.log(shoe)
 
         document.getElementById("edit-shoe-name").value = shoe.name;
         document.getElementById("edit-shoe-price").value = shoe.price;
         document.getElementById("edit-shoe-size").value = shoe.size;
         document.getElementById("edit-shoe-color").value = shoe.color;
 
-        editForm.style.display = "block";
-
-}
+        editForm.style.display = "block"
+};
 
 document.getElementById("save-edited-shoe").addEventListener("click", () => {
         const nameInput = document.getElementById("edit-shoe-name");
@@ -165,15 +211,17 @@ document.getElementById("save-edited-shoe").addEventListener("click", () => {
         const sizeInput = document.getElementById("edit-shoe-size");
         const colorInput = document.getElementById("edit-shoe-color");
 
-        const index = parseInt(document.getElementById("save-edited-shoe").getAttribute("data-index"), 10);
+        const shoeId = document.getElementById("save-edited-shoe").getAttribute("data-shoe-id")
+        console.log(shoeId)
+
 
         if (!nameInput.value || !priceInput.value || !sizeInput.value || !colorInput.value) {
                 openValidationModal("All fields are required.");
                 return;
         }
 
-        const price = parseFloat(priceInput.value);
-        const size = parseFloat(sizeInput.value);
+        const price = parseInt(priceInput.value);
+        const size = parseInt(sizeInput.value);
 
         if (isNaN(price) || price <= 0 || isNaN(size) || size <= 0) {
                 openValidationModal("Price and size must be valid numbers greater than 0.");
@@ -187,9 +235,8 @@ document.getElementById("save-edited-shoe").addEventListener("click", () => {
                 color: colorInput.value,
         };
 
-        filteredShoes[index] = editedShoe;
-
-        renderShoesList(filteredShoes);
+        const intShoeId = parseInt(shoeId);
+        updateShoe(intShoeId, editedShoe);
 
         resetEditForm();
 });
@@ -216,3 +263,6 @@ function openValidationModal(message) {
 validationModalClose.addEventListener("click", () => {
         validationModal.style.display = "none";
 });
+
+// Initial fetch of shoes from the API
+fetchShoes();
