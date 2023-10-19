@@ -17,11 +17,20 @@ function renderShoesList(shoes) {
                         <p>Size: ${shoe.size}</p>
                         <p>Color: ${shoe.color}</p>
                         <button class="edit-shoe" data-shoe-id="${shoe.id}">Edit</button>
+                        <button class="delete-shoe" data-shoe-id="${shoe.id}">Delete</button>
                         `;
 
                 shoeItem.querySelector(".edit-shoe").addEventListener("click", () => {
                         const shoeId = shoeItem.dataset.shoeId;
                         populateEditForm(shoeId);
+                });
+
+                shoeItem.querySelector(".delete-shoe").addEventListener("click", () => {
+                        const shoeId = shoeItem.dataset.shoeId;
+                        const confirmDelete = confirm("Are you sure you want to delete this shoe?");
+                        if (confirmDelete) {
+                                deleteShoeById(shoeId);
+                        }
                 });
 
                 shoesList.appendChild(shoeItem);
@@ -53,8 +62,7 @@ function createShoe(newShoe) {
 }
 
 function updateShoe(index, editedShoe) {
-        console.log(index, editedShoe)
-        const shoeId = filteredShoes[index - 1].id;
+        const shoeId = index;
         axios.put(`${apiURL}/${shoeId}`, editedShoe)
                 .then((response) => {
                         // Handle success
@@ -262,6 +270,31 @@ function openValidationModal(message) {
 
 validationModalClose.addEventListener("click", () => {
         validationModal.style.display = "none";
+});
+
+// DELETE
+
+function deleteShoeById(shoeId) {
+        axios.delete(`${apiURL}/${shoeId}`)
+                .then(() => {
+                        // Handle success
+                        console.log('Shoe deleted');
+                        fetchShoes(); // Refresh the shoe list
+                })
+                .catch((error) => {
+                        // Handle error
+                        console.error('Error deleting shoe:', error);
+                });
+}
+
+document.getElementById("shoes-list").addEventListener("click", (event) => {
+        if (event.target.classList.contains("delete-shoe")) {
+                const shoeId = event.target.getAttribute("data-shoe-id");
+                const confirmDelete = confirm("Are you sure you want to delete this shoe?");
+                if (confirmDelete) {
+                        deleteShoeById(shoeId);
+                }
+        }
 });
 
 // Initial fetch of shoes from the API
