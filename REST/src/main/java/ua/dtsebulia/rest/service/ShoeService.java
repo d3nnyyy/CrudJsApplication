@@ -16,9 +16,10 @@ public class ShoeService {
 
     private final ShoeRepository shoeRepository;
 
-    public Shoe createShoe(Shoe shoe) {
+    public List<Shoe> createShoe(Shoe shoe) {
         log.info("ShoeService::createShoe, shoe: {}", shoe);
-        return shoeRepository.save(shoe);
+        shoeRepository.save(shoe);
+        return shoeRepository.findAll();
     }
 
     public Shoe updateShoe(Integer id, Shoe shoe) {

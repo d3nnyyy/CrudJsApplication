@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ua.dtsebulia.rest.model.Shoe;
 import ua.dtsebulia.rest.service.ShoeService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
@@ -26,7 +28,7 @@ public class ShoeController {
     }
 
     @PostMapping
-    public ResponseEntity<Shoe> createShoe(@RequestBody Shoe shoe) {
+    public ResponseEntity<List<Shoe>> createShoe(@RequestBody Shoe shoe) {
 
         log.info("ShoeController::createShoe request body: {}", shoe);
 
