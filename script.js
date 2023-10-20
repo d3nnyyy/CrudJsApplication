@@ -53,7 +53,8 @@ function createShoe(newShoe) {
                 .then((response) => {
                         // Handle success
                         console.log('Shoe created:', response.data);
-                        fetchShoes(); // Refresh the shoe list
+                        filteredShoes = response.data;
+                        renderShoesList(filteredShoes);
                 })
                 .catch((error) => {
                         // Handle error
